@@ -49,6 +49,7 @@ class RossiAppState extends ChangeNotifier {
   }
 
   void toggleTime(time) {
+    print("time toggled");
     if (time == "A") {
       print("toggled time of: A");
     } else if (time == "L") {
@@ -60,6 +61,7 @@ class RossiAppState extends ChangeNotifier {
     } else {
       throw UnimplementedError('No walking time for for $time');
     }
+    notifyListeners();
   }
 
   // void toggleFavourite() {
@@ -161,47 +163,39 @@ class SubmitPage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text('Time (start):', 
+          const Text('Time (start):', 
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w200)
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Column(
             children:[
               Row(mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton.icon(
-                    onPressed: () {
-                    // Handle button press
-                    },
-                    label: Text('A'),
+                    onPressed: () {appState.toggleTime("A");},
+                    label: const Text('A'),
                     icon: Icon(Icons.check_box_outline_blank)
                   ),
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   ElevatedButton.icon(
-                    onPressed: () {
-                    // Handle button press
-                    },
-                    label: Text('L'),
+                    onPressed: () {appState.toggleTime("L");},
+                    label: const Text('L'),
                     icon: Icon(Icons.check_box_outline_blank)
                   ),
                 ],
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Row(mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton.icon(
-                    onPressed: () {
-                    // Handle button press
-                    },
-                    label: Text('D'),
+                    onPressed: () {appState.toggleTime("D");},
+                    label: const Text('D'),
                     icon: Icon(Icons.check_box_outline_blank)
                   ),
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   ElevatedButton.icon(
-                    onPressed: () {
-                    // Handle button press
-                    },
-                    label: Text('E'),
+                    onPressed: () {appState.toggleTime("E");},
+                    label: const Text('E'),
                     icon: Icon(Icons.check_box_outline_blank)
                   ),
                 ],
