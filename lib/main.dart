@@ -164,7 +164,9 @@ class SubmitPage extends StatelessWidget {
     // }
 
     return Scaffold(
+      backgroundColor: Colors.cyan[100],
       appBar: AppBar(
+        backgroundColor: Colors.cyan[200],
         title: const Text('Walk Detail'),
       ),
       body: Center(
@@ -233,10 +235,12 @@ class SubmitPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 const SizedBox(width: 180,
-                  child: const TextField(
+                  child: TextField(
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       hintText: 'Fran?',
+                      filled: true,
+                      fillColor: Colors.white10,
                     ),
                   ),
                 )
@@ -249,213 +253,10 @@ class SubmitPage extends StatelessWidget {
         onPressed: () {
           print("submitting walk");
         },
-        label: const Text('Approve'),
-        icon: const Icon(Icons.thumb_up),
-        backgroundColor: Colors.teal,
+        label: const Text('Submit'),
+        icon: const Icon(Icons.add),
+        backgroundColor: Colors.cyanAccent[400],
       ),
     );
-    // return Center(
-    //   child: Column(
-    //     mainAxisAlignment: MainAxisAlignment.center,
-    //     children: [
-    //       SizedBox(height: 10),
-    //       Row(
-    //         mainAxisSize: MainAxisSize.min,
-    //         children: [
-    //           Text('Walker(s)', style: TextStyle(fontSize: 24)),
-    //           ElevatedButton.icon(
-    //             onPressed: () {
-    //               appState.toggleWalker("MB");
-    //             },
-    //             icon: Icon(Icons.check_box_outline_blank),
-    //             label: Text("MB"),
-    //           ),
-    //           SizedBox(width: 10),
-    //           ElevatedButton.icon(
-    //             onPressed: () {
-    //               appState.toggleWalker("B");
-    //             },
-    //             icon: Icon(Icons.check_box_outline_blank),
-    //             label: Text("B"),
-    //           ),
-    //         ],
-    //       ),
-    //       SizedBox(height: 10),
-    //       Row(
-    //         mainAxisSize: MainAxisSize.min,
-    //         children: [
-    //           Text('Time (start)', style: TextStyle(fontSize: 24)),
-    //           ElevatedButton.icon(
-    //             onPressed: () {
-    //               appState.toggleTime("A");
-    //             },
-    //             icon: Icon(Icons.check_box_outline_blank),
-    //             label: Text("A"),
-    //           ),
-    //           SizedBox(width: 10),
-    //           ElevatedButton.icon(
-    //             onPressed: () {
-    //               appState.toggleTime("L");
-    //             },
-    //             icon: Icon(Icons.check_box_outline_blank),
-    //             label: Text("L"),
-    //           ),
-    //           SizedBox(width: 10),
-    //           ElevatedButton.icon(
-    //             onPressed: () {
-    //               appState.toggleTime("D");
-    //             },
-    //             icon: Icon(Icons.check_box_outline_blank),
-    //             label: Text("D"),
-    //           ),
-    //           SizedBox(width: 10),
-    //           ElevatedButton.icon(
-    //             onPressed: () {
-    //               appState.toggleTime("E");
-    //             },
-    //             icon: Icon(Icons.check_box_outline_blank),
-    //             label: Text("E"),
-    //           ),
-    //         ],            
-    //       ),
-    //     ],
-    //   ),
-    // );
   }
 }
-
-
-
-
-// class GeneratorPage extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     var appState = context.watch<RossiAppState>();
-//     var pair = appState.currentPair;
-
-//     IconData icon;
-//     if (appState.favourites.contains(pair)) {
-//       icon = Icons.favorite;
-//     } else {
-//       icon = Icons.favorite_border;
-//     }
-
-//     return Center(
-//       child: Column(
-//         mainAxisAlignment: MainAxisAlignment.center,
-//         children: [
-//           BigCard(pair: pair),
-//           SizedBox(height: 10),
-//           Row(
-//             mainAxisSize: MainAxisSize.min,
-//             children: [
-//               ElevatedButton.icon(
-//                 onPressed: () {
-//                   appState.toggleFavourite();
-//                 },
-//                 icon: Icon(icon),
-//                 label: Text('Like'),
-//               ),
-//               SizedBox(width: 10),
-//               ElevatedButton(
-//                 onPressed: () {
-//                   appState.getNext();
-//                 },
-//                 child: Text('Next'),
-//               ),
-//             ],
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
-
-
-// class FavouritesPage extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     var appState = context.watch<RossiAppState>();
-//     var favourites = appState.favourites;
-//     final theme = Theme.of(context);
-//     final style = theme.textTheme.displayMedium!.copyWith(
-//       color: theme.colorScheme.onSecondary,
-//       fontSize: 20,
-//     );
-
-//     if (favourites.isEmpty) {
-//       return Center(
-//         child: Card(
-//             color: theme.colorScheme.secondary,
-//             elevation: 150,
-//             child: Padding(
-//               padding: const EdgeInsets.all(20.0),
-//               child: Text(
-//                 style: style,
-//                 'Add Favourites to see them here.'
-//               ),
-//             ),
-//           ),
-//       );
-//     }
-
-//     return ListView(
-//       children: [
-//         Padding(
-//           padding: const EdgeInsets.all(20),
-//           child: Text(
-//             'You have ${favourites.length} fav\'s:' 
-//           ),
-//         ),
-//         for (var pair in favourites)
-//           ListTile(
-//             leading: Icon(Icons.favorite),
-//             title: Text(pair.asLowerCase),
-//           ),
-//       ],
-//     );
-//     // return ListView.builder(
-//     //   padding: const EdgeInsets.all(9),
-//     //   itemCount: favourites.length,
-//     //   itemBuilder: (BuildContext context, int index) {
-//     //     return Container(
-//     //       height: 50,
-//     //       color: Theme.of(context).colorScheme.secondaryContainer,
-//     //       child: Center(child: Text('Entry ${favourites[index]}')),
-//     //     );
-//     //   }
-//     // );
-//   }
-// }
-
-
-// class BigCard extends StatelessWidget {
-//   const BigCard({
-//     super.key,
-//     required this.pair,
-//   });
-
-//   final WordPair pair;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final theme = Theme.of(context);
-//     final style = theme.textTheme.displayMedium!.copyWith(
-//       color: theme.colorScheme.onSecondary,
-//       fontSize: 20,
-//     );
-
-//     return Card(
-//       color: theme.colorScheme.primary,
-//       elevation: 150,
-//       child: Padding(
-//         padding: const EdgeInsets.all(20.0),
-//         child: Text(
-//           pair.asPascalCase, 
-//           style: style,
-//           semanticsLabel: "${pair.first} ${pair.second}"
-//         ),
-//       ),
-//     );
-//   }
-// }
