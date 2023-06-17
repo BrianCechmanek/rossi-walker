@@ -26,8 +26,8 @@ class RossiApp extends StatelessWidget {
 }
 
 class RossiAppState extends ChangeNotifier {
-  var walker = "None";
-  var time = "None";
+  var walkers = "None";
+  var walk_time_start = "None";
 
   // var currentPair = WordPair.random();
   // var favourites = <WordPair>[];
@@ -62,6 +62,10 @@ class RossiAppState extends ChangeNotifier {
       throw UnimplementedError('No walking time for for $time');
     }
     notifyListeners();
+  }
+
+  void _submitWalk() {
+    print("submitting walk");
   }
 
   // void toggleFavourite() {
@@ -159,53 +163,97 @@ class SubmitPage extends StatelessWidget {
     //   icon = Icons.favorite_border;
     // }
 
-    return Center(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const Text('Time (start):', 
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w200)
-          ),
-          const SizedBox(height: 10),
-          Column(
-            children:[
-              Row(mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton.icon(
-                    onPressed: () {appState.toggleTime("A");},
-                    label: const Text('A'),
-                    icon: Icon(Icons.check_box_outline_blank)
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Walk Detail'),
+      ),
+      body: Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Text('Time (start):', 
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w200)
+            ),
+            const SizedBox(height: 10),
+            Column(
+              children:[
+                Row(mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton.icon(
+                      onPressed: () {appState.toggleTime("A");},
+                      label: const Text('A'),
+                      icon: Icon(Icons.check_box_outline_blank)
+                    ),
+                    const SizedBox(width: 10),
+                    ElevatedButton.icon(
+                      onPressed: () {appState.toggleTime("L");},
+                      label: const Text('L'),
+                      icon: Icon(Icons.check_box_outline_blank)
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Row(mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton.icon(
+                      onPressed: () {appState.toggleTime("D");},
+                      label: const Text('D'),
+                      icon: Icon(Icons.check_box_outline_blank)
+                    ),
+                    const SizedBox(width: 10),
+                    ElevatedButton.icon(
+                      onPressed: () {appState.toggleTime("E");},
+                      label: const Text('E'),
+                      icon: Icon(Icons.check_box_outline_blank)
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            const Text('Walker',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w200)
+            ),
+            Column(
+              children:[
+                Row(mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton.icon(
+                      onPressed: () {appState.toggleWalker("MB");},
+                      label: const Text('MB'),
+                      icon: Icon(Icons.check_box_outline_blank)
+                    ),
+                    const SizedBox(width: 10),
+                    ElevatedButton.icon(
+                      onPressed: () {appState.toggleWalker("B");},
+                      label: const Text('B'),
+                      icon: Icon(Icons.check_box_outline_blank)
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                const SizedBox(width: 180,
+                  child: const TextField(
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'Fran?',
+                    ),
                   ),
-                  const SizedBox(width: 10),
-                  ElevatedButton.icon(
-                    onPressed: () {appState.toggleTime("L");},
-                    label: const Text('L'),
-                    icon: Icon(Icons.check_box_outline_blank)
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Row(mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton.icon(
-                    onPressed: () {appState.toggleTime("D");},
-                    label: const Text('D'),
-                    icon: Icon(Icons.check_box_outline_blank)
-                  ),
-                  const SizedBox(width: 10),
-                  ElevatedButton.icon(
-                    onPressed: () {appState.toggleTime("E");},
-                    label: const Text('E'),
-                    icon: Icon(Icons.check_box_outline_blank)
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ],
-      )
+                )
+              ],            
+            ),
+          ],
+        )
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          print("submitting walk");
+        },
+        label: const Text('Approve'),
+        icon: const Icon(Icons.thumb_up),
+        backgroundColor: Colors.teal,
+      ),
     );
-
     // return Center(
     //   child: Column(
     //     mainAxisAlignment: MainAxisAlignment.center,
