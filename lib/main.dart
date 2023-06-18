@@ -17,7 +17,7 @@ class RossiApp extends StatelessWidget {
         title: 'rossi walker app',
         theme: ThemeData(
           useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(seedColor: Color.fromARGB(89, 19, 192, 189)),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.white30),
         ),
         home: HomePage(),
       ),
@@ -26,40 +26,46 @@ class RossiApp extends StatelessWidget {
 }
 
 class RossiAppState extends ChangeNotifier {
-  var walkers = "None";
-  var walk_time_start = "None";
-
-  // var currentPair = WordPair.random();
-  // var favourites = <WordPair>[];
-
-  // void getNext() {
-  //   currentPair = WordPair.random();
-  //   notifyListeners();
-  // }
 
   void toggleWalker(walker) {
-    if (walker == "MB") {
-      print("toggled MB");
-    } else if (walker == "B") {
-      print("toggled B");
-    } else {
-      print("toggled {$walker}");
+
+    RegExp nameRegExp = RegExp(
+      r"^(?!B|MB)\w+\b", 
+      caseSensitive: false, 
+      multiLine: false,
+    );
+
+
+    switch (walker) {
+      case "MB":
+        print("toggled MB");
+      case "B":
+        print("toggled B");
+      default:
+        if (nameRegExp.hasMatch(walker)) {
+          print("toggled ($walker}");
+        } else {
+          throw UnimplementedError('Walker required');
+        }
     }
     notifyListeners();
   }
 
   void toggleTime(time) {
     print("time toggled");
-    if (time == "A") {
-      print("toggled time of: A");
-    } else if (time == "L") {
-      print("toggled time of: L");
-    } else if (time == "D") {
-      print("toggled time of: D");
-    } else if (time == "E") {
-      print("toggled time of: E");
-    } else {
-      throw UnimplementedError('No walking time for for $time');
+    switch (time) {
+      case "A":
+        print("toggled time of: A");
+      case "L":
+        print("toggled time of: L");
+      case "D":
+        print("toggled time of: D");
+      case "E":
+        print("toggled time of: E");
+      case "Now":
+        print("toggled time of: Now");
+      default:
+        throw UnimplementedError('No walking time for for $time');
     }
     notifyListeners();
   }
@@ -129,7 +135,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     NavigationRailDestination(
                         icon: Icon(Icons.mode_edit_outline_outlined), 
-                        label: Text('Edit')
+                        label: Text('Edit Record')
                     ),
                   ],
                   selectedIndex: selectedIndex,
@@ -152,6 +158,9 @@ class _HomePageState extends State<HomePage> {
 }
 
 class SubmitPage extends StatelessWidget {
+  final walkers = List<bool>.filled(3, false);
+  final walkTimeStart = <String>[];
+
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<RossiAppState>();
@@ -164,15 +173,61 @@ class SubmitPage extends StatelessWidget {
     // }
 
     return Scaffold(
-      backgroundColor: Colors.cyan[100],
+      backgroundColor: Colors.white12,
       appBar: AppBar(
-        backgroundColor: Colors.cyan[200],
-        title: const Text('Walk Detail'),
+        backgroundColor: Colors.cyanAccent,
+        title: const Text('Submit a Walk'),
       ),
       body: Center(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            const Text('Walker',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w200)
+            ),
+            Column(
+              children:[
+                Row(mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton.icon(
+                      onPressed: () {appState.toggleWalker("MB");},
+                      label: const Text('MB'),
+                      icon: Icon(Icons.check_box_outline_blank)
+                    ),
+                    const SizedBox(width: 10),
+                    ElevatedButton.icon(
+                      onPressed: () {appState.toggleWalker("B");},
+                      label: const Text('B'),
+                      icon: Icon(Icons.check_box_outline_blank)
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Row(mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(width: 180,
+                      child: ElevatedButton(
+                        onPressed: () {appState.toggleWalker("someone");},
+                        child: TextField(
+                          decoration: InputDecoration(
+                            prefixIcon: const Icon(Icons.check_box_outline_blank),
+                            labelText: 'Fran?',
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(width: 1, color: Colors.cyan),
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(width: 1, color: Colors.red),
+                              borderRadius: BorderRadius.circular(15),
+                            )
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],            
+            ),
             const Text('Time (start):', 
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w200)
             ),
@@ -210,41 +265,17 @@ class SubmitPage extends StatelessWidget {
                     ),
                   ],
                 ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            const Text('Walker',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w200)
-            ),
-            Column(
-              children:[
+                SizedBox(height: 10),
                 Row(mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ElevatedButton.icon(
-                      onPressed: () {appState.toggleWalker("MB");},
-                      label: const Text('MB'),
-                      icon: Icon(Icons.check_box_outline_blank)
-                    ),
-                    const SizedBox(width: 10),
-                    ElevatedButton.icon(
-                      onPressed: () {appState.toggleWalker("B");},
-                      label: const Text('B'),
+                      onPressed: () {appState.toggleTime("Now");},
+                      label: const Text("Now"),
                       icon: Icon(Icons.check_box_outline_blank)
                     ),
                   ],
                 ),
-                const SizedBox(height: 10),
-                const SizedBox(width: 180,
-                  child: TextField(
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: 'Fran?',
-                      filled: true,
-                      fillColor: Colors.white10,
-                    ),
-                  ),
-                )
-              ],            
+              ],
             ),
           ],
         )
@@ -255,7 +286,7 @@ class SubmitPage extends StatelessWidget {
         },
         label: const Text('Submit'),
         icon: const Icon(Icons.add),
-        backgroundColor: Colors.cyanAccent[400],
+        backgroundColor: Colors.cyanAccent[200],
       ),
     );
   }
