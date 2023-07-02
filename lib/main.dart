@@ -1,9 +1,8 @@
-import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  runApp(RossiApp());
+  runApp(const RossiApp());
 }
 
 class RossiApp extends StatelessWidget {
@@ -17,9 +16,9 @@ class RossiApp extends StatelessWidget {
         title: 'rossi walker app',
         theme: ThemeData(
           useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.white30),
+          colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 185, 244, 220)),
         ),
-        home: HomePage(),
+        home: const HomePage(),
       ),
     );
   }
@@ -27,27 +26,29 @@ class RossiApp extends StatelessWidget {
 
 class RossiAppState extends ChangeNotifier {
 
+  // check_box_blank_outline -> check_box , when toggled() 
+  Map submission = {
+    "walkers" : [],
+    "time" : "",
+    };
+
+  List<String> walkers = ["MB", "B", "_"];
+  List<bool> walkersToggle = [false, false, false];
+  List<bool> timeToggle = [false, false, false, false];
+
   void toggleWalker(walker) {
 
-    RegExp nameRegExp = RegExp(
-      r"^(?!B|MB)\w+\b", 
-      caseSensitive: false, 
-      multiLine: false,
-    );
+    List walkers = submission["walkers"];
 
-
-    switch (walker) {
-      case "MB":
-        print("toggled MB");
-      case "B":
-        print("toggled B");
-      default:
-        if (nameRegExp.hasMatch(walker)) {
-          print("toggled ($walker}");
-        } else {
-          throw UnimplementedError('Walker required');
-        }
+    if (walkers.contains(walker)) {
+      walkers.remove(walker);
+    } else {
+      walkers.add(walker);
     }
+    print("walkers is now: $walkers");
+    int idx = walkers.indexOf(walker);
+    walkersToggle[idx] = !walkersToggle[idx];
+    print("walkersToggle is now $walkersToggle");
     notifyListeners();
   }
 
@@ -85,6 +86,8 @@ class RossiAppState extends ChangeNotifier {
 }
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -120,7 +123,7 @@ class _HomePageState extends State<HomePage> {
               SafeArea(
                 child: NavigationRail(
                   extended: constraints.maxWidth >= 600,
-                  destinations: [
+                  destinations: const [
                     NavigationRailDestination(
                       icon: Icon(Icons.directions_walk ),
                       label: Text('Submit Walk'),
@@ -161,10 +164,12 @@ class SubmitPage extends StatelessWidget {
   final walkers = List<bool>.filled(3, false);
   final walkTimeStart = <String>[];
 
+  SubmitPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<RossiAppState>();
-
+    
     // IconData icon;
     // if (appState.favourites.contains(pair)) {
     //   icon = Icons.favorite;
@@ -175,7 +180,7 @@ class SubmitPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white12,
       appBar: AppBar(
-        backgroundColor: Colors.cyanAccent,
+        backgroundColor: Theme.of(context).colorScheme.onTertiary,
         title: const Text('Submit a Walk'),
       ),
       body: Center(
@@ -192,13 +197,15 @@ class SubmitPage extends StatelessWidget {
                     ElevatedButton.icon(
                       onPressed: () {appState.toggleWalker("MB");},
                       label: const Text('MB'),
-                      icon: Icon(Icons.check_box_outline_blank)
+                      icon: appState.walkersToggle[0] 
+                        ? const Icon(Icons.check_box)
+                        : const Icon(Icons.check_box_outline_blank),
                     ),
                     const SizedBox(width: 10),
                     ElevatedButton.icon(
                       onPressed: () {appState.toggleWalker("B");},
                       label: const Text('B'),
-                      icon: Icon(Icons.check_box_outline_blank)
+                      icon: const Icon(Icons.check_box_outline_blank)
                     ),
                   ],
                 ),
@@ -239,13 +246,13 @@ class SubmitPage extends StatelessWidget {
                     ElevatedButton.icon(
                       onPressed: () {appState.toggleTime("A");},
                       label: const Text('A'),
-                      icon: Icon(Icons.check_box_outline_blank)
+                      icon: const Icon(Icons.check_box_outline_blank)
                     ),
                     const SizedBox(width: 10),
                     ElevatedButton.icon(
                       onPressed: () {appState.toggleTime("L");},
                       label: const Text('L'),
-                      icon: Icon(Icons.check_box_outline_blank)
+                      icon: const Icon(Icons.check_box_outline_blank)
                     ),
                   ],
                 ),
@@ -255,23 +262,23 @@ class SubmitPage extends StatelessWidget {
                     ElevatedButton.icon(
                       onPressed: () {appState.toggleTime("D");},
                       label: const Text('D'),
-                      icon: Icon(Icons.check_box_outline_blank)
+                      icon: const Icon(Icons.check_box_outline_blank)
                     ),
                     const SizedBox(width: 10),
                     ElevatedButton.icon(
                       onPressed: () {appState.toggleTime("E");},
                       label: const Text('E'),
-                      icon: Icon(Icons.check_box_outline_blank)
+                      icon: const Icon(Icons.check_box_outline_blank)
                     ),
                   ],
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Row(mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ElevatedButton.icon(
                       onPressed: () {appState.toggleTime("Now");},
                       label: const Text("Now"),
-                      icon: Icon(Icons.check_box_outline_blank)
+                      icon: const Icon(Icons.check_box_outline_blank)
                     ),
                   ],
                 ),
@@ -286,7 +293,7 @@ class SubmitPage extends StatelessWidget {
         },
         label: const Text('Submit'),
         icon: const Icon(Icons.add),
-        backgroundColor: Colors.cyanAccent[200],
+        backgroundColor: Theme.of(context).colorScheme.onPrimary,
       ),
     );
   }
