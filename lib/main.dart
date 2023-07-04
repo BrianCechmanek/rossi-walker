@@ -27,18 +27,22 @@ class RossiApp extends StatelessWidget {
 class RossiAppState extends ChangeNotifier {
 
   // check_box_blank_outline -> check_box , when toggled() 
-  Map submission = {
-    "walkers" : [],
-    "time" : "",
-    };
+  // Map submission = {
+  //   "walkers" : [],
+  //   "time" : "",
+  //   };
 
-  List<String> walkers = ["MB", "B", "_"];
-  List<bool> walkersToggle = [false, false, false];
+  String otherWalker = "_";
+  Map<String, bool> walkersToggle = {
+    "MB": false,
+    "B": false,
+    "_": false,
+  };
   List<bool> timeToggle = [false, false, false, false];
 
   void toggleWalker(walker) {
 
-    List walkers = submission["walkers"];
+    List<String> walkers = walkersToggle.keys.toList();
 
     if (walkers.contains(walker)) {
       walkers.remove(walker);
@@ -46,8 +50,7 @@ class RossiAppState extends ChangeNotifier {
       walkers.add(walker);
     }
     print("walkers is now: $walkers");
-    int idx = walkers.indexOf(walker);
-    walkersToggle[idx] = !walkersToggle[idx];
+    walkersToggle[walker] = !walkersToggle[walker]!;
     print("walkersToggle is now $walkersToggle");
     notifyListeners();
   }
@@ -161,8 +164,6 @@ class _HomePageState extends State<HomePage> {
 }
 
 class SubmitPage extends StatelessWidget {
-  final walkers = List<bool>.filled(3, false);
-  final walkTimeStart = <String>[];
 
   SubmitPage({super.key});
 
@@ -170,13 +171,6 @@ class SubmitPage extends StatelessWidget {
   Widget build(BuildContext context) {
     var appState = context.watch<RossiAppState>();
     
-    // IconData icon;
-    // if (appState.favourites.contains(pair)) {
-    //   icon = Icons.favorite;
-    // } else {
-    //   icon = Icons.favorite_border;
-    // }
-
     return Scaffold(
       backgroundColor: Colors.white12,
       appBar: AppBar(
@@ -197,7 +191,7 @@ class SubmitPage extends StatelessWidget {
                     ElevatedButton.icon(
                       onPressed: () {appState.toggleWalker("MB");},
                       label: const Text('MB'),
-                      icon: appState.walkersToggle[0] 
+                      icon: appState.walkersToggle["MB"]! 
                         ? const Icon(Icons.check_box)
                         : const Icon(Icons.check_box_outline_blank),
                     ),
@@ -205,7 +199,9 @@ class SubmitPage extends StatelessWidget {
                     ElevatedButton.icon(
                       onPressed: () {appState.toggleWalker("B");},
                       label: const Text('B'),
-                      icon: const Icon(Icons.check_box_outline_blank)
+                      icon: appState.walkersToggle["B"]! 
+                        ? const Icon(Icons.check_box)
+                        : const Icon(Icons.check_box_outline_blank),
                     ),
                   ],
                 ),
@@ -214,10 +210,12 @@ class SubmitPage extends StatelessWidget {
                   children: [
                     SizedBox(width: 180,
                       child: ElevatedButton(
-                        onPressed: () {appState.toggleWalker("someone");},
+                        onPressed: () {appState.toggleWalker("_");},
                         child: TextField(
                           decoration: InputDecoration(
-                            prefixIcon: const Icon(Icons.check_box_outline_blank),
+                            prefixIcon: appState.walkersToggle["_"]! 
+                              ? const Icon(Icons.check_box)
+                              : const Icon(Icons.check_box_outline_blank),
                             labelText: 'Fran?',
                             enabledBorder: OutlineInputBorder(
                               borderSide: const BorderSide(width: 1, color: Colors.cyan),
@@ -298,3 +296,16 @@ class SubmitPage extends StatelessWidget {
     );
   }
 }
+
+//TODO: create time button wrapper for factory
+// class WalkButton {
+
+//   final String time;
+
+//   return 
+//     ElevatedButton.icon(
+//     onPressed: () {appState.toggleTime(time);},
+//     label: const Text("Now"),
+//     icon: const Icon(Icons.check_box_outline_blank)
+//   )
+// }
