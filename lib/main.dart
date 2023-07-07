@@ -38,10 +38,15 @@ class RossiAppState extends ChangeNotifier {
     "B": false,
     "_": false,
   };
-  List<bool> timeToggle = [false, false, false, false];
+  Map<String, bool> timesToggle = {
+    "A": false, 
+    "L": false, 
+    "D": false, 
+    "E": false,
+    "Now": false
+  };
 
   void toggleWalker(walker) {
-
     List<String> walkers = walkersToggle.keys.toList();
 
     if (walkers.contains(walker)) {
@@ -56,36 +61,22 @@ class RossiAppState extends ChangeNotifier {
   }
 
   void toggleTime(time) {
-    print("time toggled");
-    switch (time) {
-      case "A":
-        print("toggled time of: A");
-      case "L":
-        print("toggled time of: L");
-      case "D":
-        print("toggled time of: D");
-      case "E":
-        print("toggled time of: E");
-      case "Now":
-        print("toggled time of: Now");
-      default:
-        throw UnimplementedError('No walking time for for $time');
+    List<String> times = timesToggle.keys.toList();
+
+    if (times.contains(time)) {
+      times.remove(time);
+    } else {
+      times.add(time);
     }
+    print("times is now: $times");
+    timesToggle[time] = !timesToggle[time]!;
+    print("timesToggle is now $timesToggle");
     notifyListeners();
   }
 
   void _submitWalk() {
     print("submitting walk");
   }
-
-  // void toggleFavourite() {
-  //   if (favourites.contains(currentPair)) {
-  //     favourites.remove(currentPair);
-  //   } else {
-  //     favourites.add(currentPair);
-  //   }
-  //   notifyListeners();
-  // }
 }
 
 class HomePage extends StatefulWidget {
@@ -170,7 +161,16 @@ class SubmitPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<RossiAppState>();
-    
+
+    // make expected walkers list & buttons
+    List<String> defaultWalkers = ["MB", "B", "_"];
+    late List<Widget> walkerButtons = defaultWalkers.map(
+      (String text) => WalkerButton(walkerLabel:text)).toList();
+    // and the walk times list & buttons 
+    List<String> defaultTimes = ["A", "L", "D", "E", "Now"];
+    late List<Widget> timeButtons = defaultTimes.map(
+      (String text) => TimeButton(timeLabel:text)).toList();
+
     return Scaffold(
       backgroundColor: Colors.white12,
       appBar: AppBar(
@@ -188,21 +188,9 @@ class SubmitPage extends StatelessWidget {
               children:[
                 Row(mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ElevatedButton.icon(
-                      onPressed: () {appState.toggleWalker("MB");},
-                      label: const Text('MB'),
-                      icon: appState.walkersToggle["MB"]! 
-                        ? const Icon(Icons.check_box)
-                        : const Icon(Icons.check_box_outline_blank),
-                    ),
+                    walkerButtons[0],
                     const SizedBox(width: 10),
-                    ElevatedButton.icon(
-                      onPressed: () {appState.toggleWalker("B");},
-                      label: const Text('B'),
-                      icon: appState.walkersToggle["B"]! 
-                        ? const Icon(Icons.check_box)
-                        : const Icon(Icons.check_box_outline_blank),
-                    ),
+                    walkerButtons[1],
                   ],
                 ),
                 const SizedBox(height: 10),
@@ -241,43 +229,23 @@ class SubmitPage extends StatelessWidget {
               children:[
                 Row(mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ElevatedButton.icon(
-                      onPressed: () {appState.toggleTime("A");},
-                      label: const Text('A'),
-                      icon: const Icon(Icons.check_box_outline_blank)
-                    ),
+                    timeButtons[0],
                     const SizedBox(width: 10),
-                    ElevatedButton.icon(
-                      onPressed: () {appState.toggleTime("L");},
-                      label: const Text('L'),
-                      icon: const Icon(Icons.check_box_outline_blank)
-                    ),
+                    timeButtons[1],
                   ],
                 ),
                 const SizedBox(height: 10),
                 Row(mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ElevatedButton.icon(
-                      onPressed: () {appState.toggleTime("D");},
-                      label: const Text('D'),
-                      icon: const Icon(Icons.check_box_outline_blank)
-                    ),
+                    timeButtons[2],
                     const SizedBox(width: 10),
-                    ElevatedButton.icon(
-                      onPressed: () {appState.toggleTime("E");},
-                      label: const Text('E'),
-                      icon: const Icon(Icons.check_box_outline_blank)
-                    ),
+                    timeButtons[3],
                   ],
                 ),
                 const SizedBox(height: 10),
                 Row(mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ElevatedButton.icon(
-                      onPressed: () {appState.toggleTime("Now");},
-                      label: const Text("Now"),
-                      icon: const Icon(Icons.check_box_outline_blank)
-                    ),
+                    timeButtons[4],
                   ],
                 ),
               ],
@@ -297,15 +265,46 @@ class SubmitPage extends StatelessWidget {
   }
 }
 
-//TODO: create time button wrapper for factory
-// class WalkButton {
+class WalkerButton extends StatelessWidget{
 
-//   final String time;
+  final String walkerLabel;
 
-//   return 
-//     ElevatedButton.icon(
-//     onPressed: () {appState.toggleTime(time);},
-//     label: const Text("Now"),
-//     icon: const Icon(Icons.check_box_outline_blank)
-//   )
-// }
+  const WalkerButton({Key? key, required this.walkerLabel}): super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton.icon(
+      onPressed: () {
+        final appState = context.read<RossiAppState>();
+        appState.toggleWalker(walkerLabel);
+      },
+      label: Text(walkerLabel),
+      icon:
+        context.read<RossiAppState>().walkersToggle[walkerLabel]! 
+        ? const Icon(Icons.check_box)
+        : const Icon(Icons.check_box_outline_blank),
+    );
+  }
+}
+
+class TimeButton extends StatelessWidget{
+
+  final String timeLabel;
+
+  const TimeButton({Key? key, required this.timeLabel}): super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton.icon(
+      onPressed: () {
+        final appState = context.read<RossiAppState>();
+        appState.toggleTime(timeLabel);
+      },
+      label: Text(timeLabel),
+      icon:
+        context.read<RossiAppState>().timesToggle[timeLabel]! 
+        ? const Icon(Icons.check_box)
+        : const Icon(Icons.check_box_outline_blank),
+    );
+  }
+}
